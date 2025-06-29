@@ -1,7 +1,7 @@
 import { FilterStatus } from "@/types/FilterStatus";
 import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { styles } from './styles';
-import { CircleDashed, CircleCheck } from 'lucide-react-native';
+import { StatusIcon } from "../StatusIcon";
 
 type Props = TouchableOpacityProps & {
   status: FilterStatus
@@ -15,7 +15,7 @@ export function Filter({ status, isActive, ...rest }: Props) {
       activeOpacity={0.8}
       {...rest}
     >
-      
+      <StatusIcon status={status} />
       <Text style={styles.title}>
         { status === FilterStatus.DONE ? "Comprados" : "Pendentes"}
       </Text>
