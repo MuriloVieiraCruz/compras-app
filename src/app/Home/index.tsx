@@ -1,20 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { styles } from './styles';
+import { Button } from '@/components/Button';
+import { Input } from '@/components/Input';
 
 export function Home() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Image source={require('@/assets/logo.png')} style={styles.logo}/>
+      
+      <View style={styles.form}>
+        <Input placeholder='O que você precisa comprar?'/>
+        <Button title='Entrar'/>
+      </View>
+
+      <View style={styles.content}>
+
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
