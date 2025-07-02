@@ -116,8 +116,4 @@ Feito por Murilo Vieira Cruz — entre em contato!
 
 GitHub: github.com/MuriloVieiraCruz
 
-perl
-Copiar
-Editar
-
 Se quiser, posso gerar esse `README.md` automaticamente no seu projeto ou customizar com seu
