@@ -58,6 +58,14 @@ export function Home() {
       { text: "Sim", onPress: () => onClear() }
     ]);
   }
+  async function handleToggleItemStatus(id: string) {
+    try {
+      await itemStorage.toggleStatus(id);
+      await itemsByStatus();
+    } catch(error) {
+      Alert.alert("Erro", "Não foi possível atualizar o status.");
+    }
+  }
 
   async function itemsByStatus() {
     try {
@@ -112,7 +120,7 @@ export function Home() {
               <Item
                 data={item}
                 onRemove={() => handleRemove(item.id)}
-                onStatus={() => console.log()}
+                onStatus={() => handleToggleItemStatus(item.id)}
               />
             )}
             showsVerticalScrollIndicator={false}
