@@ -15,23 +15,53 @@ export function Home() {
   const [description, setDescription] = useState("");
   const [items, setItems] = useState<ItemStorage[]>([]);
 
-  function handleItems() {
+  async function handleAdd() {
     if (!description.trim()) {
       return Alert.alert("Adicionar", "Informe a descrição para adicionar");
     }
 
-    const newItem = {
+    const newItem: ItemStorage = {
       id: Math.random().toString(36).substring(2),
       description,
       status: FilterStatus.PENDING,
     }
 
-    setItems((prevState) => [...prevState, newItem]);
+    const items = await itemStorage.add(newItem);
+    setItems(items);
+
+    Alert.alert("Adicionado", `Adicionado ${description}`);
+    setDescription("");
+    setFilter(FilterStatus.PENDING);
   }
 
-  async function getItems() {
+  async function handleRemove(id: string) {
     try {
-      const response = await itemStorage.get();
+      await itemStorage.remove(id);
+      await itemsByStatus();
+    } catch(error) {
+      Alert.alert("Remover", "Não foi possível remover o item selecionado.");
+    }
+  }
+
+  async function onClear() {
+    try {
+      await itemStorage.clear();
+      setItems([]);
+    } catch(error) {
+      Alert.alert("Limpar", "Não foi possível remover todos os itens.");
+    }
+  }
+
+  function handleClear() {
+    Alert.alert("Limpar", "Deseja realmente apagar todos?", [
+      { text: "Não", style: "cancel" },
+      { text: "Sim", onPress: () => onClear() }
+    ]);
+  }
+
+  async function itemsByStatus() {
+    try {
+      const response = await itemStorage.getByStatus(filter);
       setItems(response);
     } catch(error) {
       Alert.alert("Erro", "Não foi possível filtrar os itens.")
@@ -39,8 +69,8 @@ export function Home() {
   }
 
   useEffect(() => {
-    itemStorage.get()
-  }, []);
+    itemsByStatus();
+  }, [filter]);
 
   return (
     <View style={styles.container}>
@@ -50,10 +80,11 @@ export function Home() {
         <Input 
           placeholder='O que você precisa comprar?'
           onChangeText={setDescription}
+          value={description}
         />
         <Button 
           title='Adicionar'
-          onPress={handleItems}
+          onPress={handleAdd}
         />
       </View>
 
@@ -69,7 +100,7 @@ export function Home() {
             ))
           }
 
-          <TouchableOpacity style={styles.clearButton}>
+          <TouchableOpacity style={styles.clearButton} onPress={handleClear}>
             <Text style={styles.clearText}>Limpar</Text>
           </TouchableOpacity>
         </View>
@@ -80,7 +111,7 @@ export function Home() {
             renderItem={({ item }) => (
               <Item
                 data={item}
-                onRemove={() => console.log()}
+                onRemove={() => handleRemove(item.id)}
                 onStatus={() => console.log()}
               />
             )}
